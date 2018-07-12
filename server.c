@@ -11,6 +11,9 @@
 int main(int argc, char **argv)
 {
 	char recv_buff[1024];
+	char *response = "Hello Stone!\r\n";
+	int response_len = strlen(response);
+
 	struct sockaddr_in servaddr;
 
 	servaddr.sin_family = AF_INET;
@@ -25,6 +28,7 @@ int main(int argc, char **argv)
 	int clientfd = accept(servfd, (struct sockaddr *)&servaddr, &servaddr_len);
 
 	int recv_len = read(clientfd, recv_buff, 1024);
+	write(clientfd, response, response_len);
 	write(STDOUT_FILENO, recv_buff, recv_len);
 	
 	return 0;
