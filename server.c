@@ -71,11 +71,11 @@ void *connetion_process(void *arg)
 	while((recv_len = read(clientfd, recv_buff, 1024)) > 0)
 	{
 		write(STDOUT_FILENO, recv_buff, recv_len);
-
-		for(int i = 0; i < sock_count; i++)
-		{
-			write(sock_buff[i], recv_buff, recv_len);
-		}
+		
+		int clientfd_no = atoi(recv_buff);
+		printf("clientfd_no: %d\r\n",clientfd_no);
+		
+		write(sock_buff[clientfd_no], recv_buff, recv_len);
 		
 		if(!strncmp(recv_buff, "!quit ",6))
 		{
