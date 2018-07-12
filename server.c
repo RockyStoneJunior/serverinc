@@ -17,6 +17,9 @@ struct arg{
 	int clientfd;
 };
 
+int sock_buff[100] = {0};
+int sock_count = 0;
+
 void *connetion_process(void *);
 
 int main(int argc, char **argv)
@@ -44,6 +47,7 @@ int main(int argc, char **argv)
 	while(1)
 	{
 		int clientfd = accept(servfd, (struct sockaddr *)&servaddr, &servaddr_len);
+		sock_buff[sock_count++] = clientfd;
 
 		connection_thread_arg = malloc(sizeof(struct arg));
 		connection_thread_arg->serverfd = servfd;
@@ -67,6 +71,11 @@ void *connetion_process(void *arg)
 	while((recv_len = read(clientfd, recv_buff, 1024)) > 0)
 	{
 		write(STDOUT_FILENO, recv_buff, recv_len);
+
+		for(int i = 0; i < sock_count; i++)
+		{
+			write(sock_buff[i], recv_buff, recv_len);
+		}
 		
 		if(!strncmp(recv_buff, "!quit ",6))
 		{
